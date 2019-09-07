@@ -2,29 +2,51 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_margin="20dp"
     >
 
-    <EditText
+    <TextView
         android:id="@+id/name"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:hint="Nama Aplikasi " />
+        android:layout_margin="20dp"
+        android:text="Homee"
+        android:textSize="30dp"/>
 
-    <EditText
+    <TextView
         android:id="@+id/user"
-        android:layout_width="180dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
         android:layout_toRightOf="@+id/name"
-        android:hint="Nama User " />
-
-    <EditText
-        android:id="@+id/message"
+        android:text="Nadia"
+        android:textSize="20dp"
+        android:gravity="right"/>
+    <TextView
+        android:id="@+id/lorem"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_below="@+id/name"
-        android:gravity="top"
-        android:hint="HOME" />
+        android:layout_height="wrap_content"
+        android:text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
+        android:textAlignment="center"
+        android:layout_below="@id/name"/>
+
+    <Button
+        android:id="@+id/Button_About"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/lorem"
+        android:layout_marginTop="50dp"
+        android:layout_centerInParent="true"
+        android:text="ABOUT"
+        android:onClick="about"/>
+    <Button
+        android:id="@+id/Button_Logout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/Button_About"
+        android:layout_marginTop="50dp"
+        android:layout_centerInParent="true"
+        android:text="LOGOUT"
+        android:onClick="logout"/>
 
 
 </RelativeLayout>

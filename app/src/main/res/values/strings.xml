@@ -3,4 +3,5 @@
     <string name="title_activity_main___utama">Main_Activity_Utama</string>
     <string name="title_activity_home">Home</string>
     <string name="title_activity_about">About</string>
+    <string name="back">Back</string>
 </resources>

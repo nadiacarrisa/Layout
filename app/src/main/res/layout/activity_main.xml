@@ -2,13 +2,23 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:orientation="vertical"
+        android:layout_margin="20dp"
         android:gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="HELLOO"
+            android:textStyle="bold"
+            android:textSize="30dp"
+            android:textColor="@color/design_default_color_primary"/>
 
         <EditText
             android:id="@+id/txtEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textEmailAddress" >
+            android:inputType="textEmailAddress"
+            android:hint="Email Address">
 
             <requestFocus />
         </EditText>
@@ -16,7 +26,8 @@
             android:id="@+id/txtPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textPassword" >
+            android:inputType="textPassword"
+            android:hint="Password">
 
             <requestFocus />
         </EditText>
@@ -25,7 +36,8 @@
             android:id="@+id/btnSubmit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="LOGIN" />
+            android:text="LOGIN"
+            android:onClick="login"/>
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="wrap_content"
@@ -39,7 +51,9 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Sign up now"></TextView>
+                android:text=" Sign up now"
+                android:onClick="signup"
+                android:clickable="true"></TextView>
 
         </LinearLayout>
 

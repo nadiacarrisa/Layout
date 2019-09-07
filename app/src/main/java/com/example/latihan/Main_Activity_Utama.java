@@ -1,5 +1,6 @@
 package com.example.latihan;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -15,7 +16,11 @@ public class Main_Activity_Utama extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main___utama);
+    }
+    public void signup(View view){
+        Intent intent = new Intent(Main_Activity_Utama.this, Home.class);
+        startActivity(intent);
     }
 //    txt.setOnClickListener(new View.OnClickListener(){
 //       @Override
