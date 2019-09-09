@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(MainActivity.this, Main_Activity_Utama.class);
         startActivity(intent);
     }
+
     public void login(View view){
         final EditText emailValidate = (EditText)findViewById(R.id.txtEmail);
 

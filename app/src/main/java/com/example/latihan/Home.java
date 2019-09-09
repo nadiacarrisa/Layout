@@ -29,6 +29,10 @@ public class Home extends AppCompatActivity {
 //            }
 //        });
     }
+    public void cobafragment(View view){
+        Intent intent = new Intent(Home.this, Coba_Fragment.class);
+        startActivity((intent));
+    }
     public void about(View view){
         Intent intent = new Intent(Home.this, About.class);
         startActivity(intent);
@@ -37,5 +41,6 @@ public class Home extends AppCompatActivity {
         Intent i = new Intent(Home.this, MainActivity.class);
         startActivity(i);
     }
+
 
 }
