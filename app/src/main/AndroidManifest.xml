@@ -9,7 +9,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Coba_Fragment"></activity>
+        <activity android:name=".ChildFragment2"></activity>
+        <activity android:name=".ChildFragment1" />
+        <activity android:name=".home_viewpager" />
+        <activity android:name=".ViewPagerAdapter" />
+        <activity android:name=".PesanKeluar_Viewpager" />
+        <activity android:name=".PesanMasuk_Viewpager" />
+        <activity android:name=".viewPager" />
+        <activity android:name=".penampung_viewpager" />
+        <activity android:name=".about_viewpager" />
+        <activity android:name=".Coba_Fragment" />
         <activity
             android:name=".Home"
             android:label="@string/title_activity_home"

@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
         if (email.matches(emailPattern))
         {
             Toast.makeText(getApplicationContext(),"valid email address",Toast.LENGTH_SHORT).show();
-            Intent i = new Intent(MainActivity.this, Home.class);
+            Intent i = new Intent(MainActivity.this, home_viewpager.class);
             startActivity(i);
         }
         else
