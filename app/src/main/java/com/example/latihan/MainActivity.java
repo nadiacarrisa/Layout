@@ -5,7 +5,10 @@ import androidx.core.app.NotificationCompat;
 
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.job.JobInfo;
+import android.app.job.JobScheduler;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -20,7 +23,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
-    //Button btn = (Button)findViewById(R.id.btnSubmit);
     private boolean isReciverReigtered = false;
 
     @Override
@@ -56,63 +58,6 @@ public class MainActivity extends AppCompatActivity {
         {
             Toast.makeText(getApplicationContext(),"Invalid email address", Toast.LENGTH_SHORT).show();
         }
-
-    }
-    private BroadcastReceiver receiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if(!isNetworkAvailable(context)){
-                Toast.makeText(context, "ON",Toast.LENGTH_SHORT).show();
-                Notification(context, "Wifi Connection On");
-            }
-            else if(isNetworkAvailable(context)){
-                Toast.makeText(context, "OFF",Toast.LENGTH_SHORT).show();
-                Notification(context, "Wifi Connection OFF");
-            }
-        }
-        public void Notification(Context context, String msg){
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
-                    .setSmallIcon(R.drawable.ic_launcher_simbol)
-                    .setTicker(msg)
-                    .setContentTitle("Latihan notification wifi")
-                    .setContentText(msg)
-                    .setAutoCancel(true);
-            NotificationManager notificationmanager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-            notificationmanager.notify(0, builder.build());
-        }
-
-        private boolean isNetworkAvailable(Context context){
-            ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-            NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-            return activeNetworkInfo != null;
-        }
-    };
-    protected void onResume(){
-        super.onResume();
-        if(!isReciverReigtered){
-            isReciverReigtered = true;
-            registerReceiver(receiver, new IntentFilter("android.net.wifi.STATE_CHANGE"));
-        }
-    }
-    protected void onPause(){
-        super.onPause();
-        if(isReciverReigtered){
-
-        }
     }
 
-//    txt.setOnClickListener(new View.OnClickListener(){
-//       @Override
-//       public void onClick(View v){
-//
-//        }
-//    });
-
-//    txt.setOnClickListener (new View.OnClickListener(){
-//        @Override
-//                public void onClick(View v){
-//            Intent i = new Intent (MainActivity.this, Activity_Kedua.class);
-//            startActivity(i);
-//        }
-//    });
 }
