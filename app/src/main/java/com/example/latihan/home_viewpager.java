@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.google.android.material.tabs.TabLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.viewpager.widget.ViewPager;
 
 import java.util.Timer;
@@ -49,33 +50,38 @@ public class home_viewpager extends AppCompatActivity {
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo networkInfo  = connectivityManager.getActiveNetworkInfo();
+
             if(!isNetworkAvailable(context)){
                 //Toast.makeText(context, "ON",Toast.LENGTH_SHORT).show();
-                Notification(context, "Wifi Connection On");
+                Notification("Wifi Connection On");
             }
             else if(isNetworkAvailable(context)){
                 //Toast.makeText(context, "OFF",Toast.LENGTH_SHORT).show();
-                Notification(context, "Wifi Connection OFF");
+                Notification("Wifi Connection OFF");
             }
-        }
-        public void Notification(Context context, String msg){
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//                CharSequence name = getString(R.string.channel_name);
-//                String description = getString(R.string.channel_description);
-//                int importance = NotificationManager.IMPORTANCE_DEFAULT;
-//                NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
-//                channel.setDescription(description);
-//                NotificationManager notificationManager = getSystemService(NotificationManager.class);
-//                notificationManager.createNotificationChannel(channel);
-//            }
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
+
+        } };
+        private void Notification(String message){
+
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+                NotificationChannel channel =
+                        new NotificationChannel("Notifications", "Notifications", NotificationManager.IMPORTANCE_DEFAULT);
+
+                NotificationManager manager = getSystemService(NotificationManager.class);
+                manager.createNotificationChannel(channel);
+            }
+
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "Notifications")
+                    .setContentTitle("Wifi Notofication")
                     .setSmallIcon(R.drawable.ic_launcher_foreground)
-                    .setTicker(msg)
-                    .setContentTitle("Latihan notification wifi")
-                    .setContentText(msg)
-                    .setAutoCancel(true);
-            NotificationManager notificationmanager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-            notificationmanager.notify(0, builder.build());
+                    .setAutoCancel(true)
+                    .setContentText(message);
+
+            NotificationManagerCompat manager = NotificationManagerCompat.from(this);
+            manager.notify(999,builder.build());
+
         }
 
         private boolean isNetworkAvailable(Context context){
@@ -83,7 +89,7 @@ public class home_viewpager extends AppCompatActivity {
             NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
             return activeNetworkInfo != null;
         }
-    };
+
     protected void onResume(){
         super.onResume();
         if(!isReciverReigtered){
