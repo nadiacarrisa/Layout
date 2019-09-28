@@ -39,6 +39,14 @@ public class ChildFragment1 extends Fragment {
                 startActivity(intent1);
             }
         });
+        Button movie = rootView.findViewById(R.id.movie);
+        movie.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent1 = new Intent(view.getContext(), film.class);
+                startActivity(intent1);
+            }
+        });
         return rootView;
     }
 }

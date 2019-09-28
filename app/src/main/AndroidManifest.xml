@@ -17,6 +17,7 @@
         <activity android:name=".home_viewpager" />
         <activity android:name=".ViewPagerAdapter" />
         <activity android:name=".Coba_Fragment" />
+        <activity android:name=".film"/>
         <activity
             android:name=".Home"
             android:label="@string/title_activity_home"

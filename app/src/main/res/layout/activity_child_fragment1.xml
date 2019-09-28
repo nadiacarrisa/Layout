@@ -43,6 +43,14 @@
         android:layout_centerInParent="true"
         android:text="Log Out"
         />
+    <Button
+        android:id="@+id/movie"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/logout"
+        android:layout_centerInParent="true"
+        android:text="LIST MOVIE"
+        />
 
 
 
