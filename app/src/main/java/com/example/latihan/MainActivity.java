@@ -12,6 +12,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkInfo;
@@ -24,11 +25,23 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
     private boolean isReciverReigtered = false;
-
+    SharedPreferences sharedpreferences;
+    public static final String MyPREFERENCES = "MyPrefs" ;
+    public static final String Email = "emailKey";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+        System.out.println("available Login Email : "+ sharedpreferences.getString(Email,new String()));
+        if(sharedpreferences.getString(Email,new String())!=""){
+            Intent i = new Intent(MainActivity.this, home_viewpager.class);
+            Bundle b = new Bundle();
+            b.putString("Email", sharedpreferences.getString(Email,new String()));
+            i.putExtras(b);
+            startActivity(i);
+        }
     }
 
     public void signup(View view){
@@ -44,6 +57,12 @@ public class MainActivity extends AppCompatActivity {
         String email = emailValidate.getText().toString().trim();
 
         String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
+
+
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        editor.putString(Email, email);
+        editor.commit();
+
 
         // onClick of button perform this simplest code.
         if (email.matches(emailPattern))
