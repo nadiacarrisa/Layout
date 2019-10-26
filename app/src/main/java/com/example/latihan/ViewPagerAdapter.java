@@ -12,7 +12,8 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
         super(fm);
         childFragments = new Fragment[] {
                 new ChildFragment1(),
-                new ChildFragment2()
+                new ChildFragment2(),
+                new ChildFragment3Insert()
         };
     }
 
@@ -32,8 +33,11 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
         if(position==0){
             tab="HOME";
         }
-        else{
+        else if(position==1){
             tab="ABOUT";
+        }
+        else {
+            tab="DATA";
         }
         return tab;
     }

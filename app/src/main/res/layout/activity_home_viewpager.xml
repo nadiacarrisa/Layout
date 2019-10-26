@@ -8,22 +8,25 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         >
-        <Button
-            android:id="@+id/schedulejob"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="scheduleJob"
-            android:layout_centerInParent="true"
-            android:text="Schedule Job" />
 
-        <Button
-            android:id="@+id/canceljob"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/schedulejob"
-            android:layout_centerInParent="true"
-            android:onClick="cancelJob"
-            android:text="Cancel Job" />
+<!--        <Button-->
+<!--            android:id="@+id/schedulejob"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_centerInParent="true"-->
+<!--            android:onClick="scheduleJob"-->
+<!--            android:text="Schedule Job" />-->
+
+<!--        <Button-->
+<!--            android:id="@+id/canceljob"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_below="@+id/schedulejob"-->
+<!--            android:layout_centerInParent="true"-->
+<!--            android:onClick="cancelJob"-->
+<!--            android:text="Cancel Job"-->
+<!--            android:layout_toRightOf="@+id/schedulejob"/>-->
+
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/view_pager"
             android:layout_width="match_parent"
