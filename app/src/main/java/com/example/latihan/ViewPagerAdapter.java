@@ -13,6 +13,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
         childFragments = new Fragment[] {
                 new ChildFragment1(),
                 new ChildFragment2(),
+                new firebase_fragment(),
                 new ChildFragment3Insert()
         };
     }
@@ -35,6 +36,9 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
         }
         else if(position==1){
             tab="ABOUT";
+        }
+        else if(position==2){
+            tab="Firebase";
         }
         else {
             tab="DATA";

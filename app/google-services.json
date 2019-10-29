@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "536848956741",
+    "firebase_url": "https://progandro-latihan.firebaseio.com",
+    "project_id": "progandro-latihan",
+    "storage_bucket": "progandro-latihan.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:536848956741:android:be0eb93299f75672d2122c",
+        "android_client_info": {
+          "package_name": "com.example.latihan"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "536848956741-ncjb042gk72998pbl7sat9gjaa2j2h9k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCfw4YPNcQqmqV3_jSeaGJua9qYBNaToTE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "536848956741-ncjb042gk72998pbl7sat9gjaa2j2h9k.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
