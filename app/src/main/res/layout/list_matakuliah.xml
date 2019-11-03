@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp">
+    <TextView
+        android:id="@+id/mtk"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nama Matakuliah: "></TextView>
+    <TextView
+        android:id="@+id/matakuliah"
+        android:layout_toRightOf="@id/mtk"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="mtk"></TextView>
+
+    <TextView
+        android:id="@+id/d"
+        android:layout_below="@id/matakuliah"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nama Dosen: "></TextView>
+    <TextView
+        android:id="@+id/dosen"
+        android:layout_toRightOf="@id/mtk"
+        android:layout_below="@id/matakuliah"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="dosen" />
+
+    <TextView
+        android:id="@+id/s"
+        android:layout_below="@id/dosen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Jumlah SKS: "></TextView>
+    <TextView
+        android:id="@+id/sks"
+        android:layout_toRightOf="@id/mtk"
+        android:layout_below="@id/dosen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="sks"></TextView>
+</RelativeLayout>

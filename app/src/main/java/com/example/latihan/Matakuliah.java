@@ -4,6 +4,9 @@ public class Matakuliah {
     private String namamtk;
     private int sks;
     private String dosen;
+    public Matakuliah(){
+
+    }
 
     public Matakuliah(String namamtk, int sks, String dosen) {
         this.namamtk = namamtk;

@@ -7,26 +7,47 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.Executor;
 
 public class firebase_fragment extends Fragment {
+    private String id;
     private EditText namamtk;
     private EditText sks;
     private EditText dosen;
     private Button buttonSimpan;
+    private RecyclerView recyclerView;
     private Button buttonHapus;
     private FirebaseFirestore firebaseFirestoreDb;
+    private CollectionReference fireRef;
+    private FirestoreRecyclerAdapter<Matakuliah, DataViewHolder> adapter;
+    private Query query;
 
     @Override
     public View onCreateView(LayoutInflater inflater,
@@ -34,11 +55,15 @@ public class firebase_fragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_firebase, container, false);
         namamtk = view.findViewById(R.id.namaMtk);
+        recyclerView = view.findViewById(R.id.listfirestore);
         sks = view.findViewById(R.id.sks);
         dosen = view.findViewById(R.id.dosen);
         buttonSimpan = view.findViewById(R.id.simpanButton);
         buttonHapus = view.findViewById(R.id.hapusButton);
         firebaseFirestoreDb = FirebaseFirestore.getInstance();
+        fireRef = firebaseFirestoreDb.collection("DaftarMhs");
+        query = fireRef.orderBy("namamtk", Query.Direction.ASCENDING);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         buttonSimpan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -52,6 +77,64 @@ public class firebase_fragment extends Fragment {
             }
         });
         return view;
+    }
+    @Override
+    public void onStart(){
+        super.onStart();
+        FirestoreRecyclerOptions<Matakuliah> options = new FirestoreRecyclerOptions.Builder<Matakuliah>()
+                .setQuery(query, Matakuliah.class)
+                .build();
+        adapter = new FirestoreRecyclerAdapter<Matakuliah, DataViewHolder>(options) {
+            @Override
+            protected void onBindViewHolder(@NonNull DataViewHolder dataViewHolder, int i, @NonNull Matakuliah data) {
+                dataViewHolder.dsn.setText(data.getDosen());
+                dataViewHolder.mtk.setText(data.getNamamtk());
+                dataViewHolder.sks.setText(String.valueOf(data.getSks()));
+            }
+
+            @NonNull
+            @Override
+            public DataViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType){
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_matakuliah, parent, false);
+                return new DataViewHolder(view);
+            }
+            public void deleteItem(int position){
+                getSnapshots().getSnapshot(position).getReference().delete();
+            }
+        };
+        recyclerView.setAdapter(adapter);
+        adapter.startListening();
+    }
+    private class DataViewHolder extends RecyclerView.ViewHolder {
+        TextView mtk;
+        TextView dsn;
+        TextView sks;
+        public DataViewHolder(View itemView){
+            super(itemView);
+            mtk = itemView.findViewById(R.id.matakuliah);
+            dsn = itemView.findViewById(R.id.dosen);
+            sks = itemView.findViewById(R.id.sks);
+        }
+    }
+    public void onStop(){
+        super.onStop();
+        adapter.stopListening();
+    }
+
+    public void getid(){
+        fireRef.addSnapshotListener((Executor) this, new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                if(e != null){
+                    return;
+                }
+                for(QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots){
+                    Matakuliah matakuliah = documentSnapshot.toObject(Matakuliah.class);
+                    id = documentSnapshot.getId();
+                    Toast.makeText(requireActivity(),id, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
     private void tambahMahasiswa() {
         Matakuliah mhs = new Matakuliah(namamtk.getText().toString(),
@@ -87,6 +170,7 @@ public class firebase_fragment extends Fragment {
                         namamtk.setText(mhs.getNamamtk());
                         sks.setText(mhs.getSks());
                         dosen.setText(mhs.getDosen());
+
                     } else {
                         Toast.makeText(requireActivity(), "Document tidak ditemukan",
                                 Toast.LENGTH_SHORT).show();
@@ -98,8 +182,8 @@ public class firebase_fragment extends Fragment {
             }
         });
     }
-    private void deleteDataMahasiswa() {
-        firebaseFirestoreDb.collection("DaftarMhs").document("mhs1")
+    private void deleteDataMahasiswa(String id) {
+        firebaseFirestoreDb.collection("DaftarMhs").document(id)
                 .delete()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -118,13 +202,11 @@ public class firebase_fragment extends Fragment {
                                 Toast.LENGTH_SHORT).show();
                     }
                 });
-        buttonHapus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                deleteDataMahasiswa();
-            }
-        });
-
+//        buttonHapus.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                deleteDataMahasiswa();
+//            }
+//        });
     }
-
 }
