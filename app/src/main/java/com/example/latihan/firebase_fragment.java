@@ -13,6 +13,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -41,13 +42,15 @@ public class firebase_fragment extends Fragment {
     private EditText namamtk;
     private EditText sks;
     private EditText dosen;
+    private Button buttonHapus;
     private Button buttonSimpan;
     private RecyclerView recyclerView;
-    private Button buttonHapus;
+    private Button buttonEdit;
     private FirebaseFirestore firebaseFirestoreDb;
     private CollectionReference fireRef;
     private FirestoreRecyclerAdapter<Matakuliah, DataViewHolder> adapter;
     private Query query;
+    private OnItemClickListener listener;
 
     @Override
     public View onCreateView(LayoutInflater inflater,
@@ -60,6 +63,7 @@ public class firebase_fragment extends Fragment {
         dosen = view.findViewById(R.id.dosen);
         buttonSimpan = view.findViewById(R.id.simpanButton);
         buttonHapus = view.findViewById(R.id.hapusButton);
+        buttonEdit = view.findViewById(R.id.editButton);
         firebaseFirestoreDb = FirebaseFirestore.getInstance();
         fireRef = firebaseFirestoreDb.collection("DaftarMhs");
         query = fireRef.orderBy("namamtk", Query.Direction.ASCENDING);
@@ -70,8 +74,70 @@ public class firebase_fragment extends Fragment {
                 //sanity check
                 if (!namamtk.getText().toString().isEmpty() && !sks.getText().toString().isEmpty()&& !dosen.getText().toString().isEmpty()) {
                     tambahMahasiswa();
+                    namamtk.setText("");
+                    dosen.setText("");
+                    sks.setText("");
                 } else {
-                    Toast.makeText(requireActivity(), "No dan Nama Mhs tidak boleh kosong",
+                    Toast.makeText(requireActivity(), "Data tidak boleh kosong",
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        buttonHapus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //sanity check
+                if (!namamtk.getText().toString().isEmpty() && !sks.getText().toString().isEmpty()&& !dosen.getText().toString().isEmpty()) {
+                    fireRef.document(id).delete();
+                    namamtk.setText("");
+                    dosen.setText("");
+                    sks.setText("");
+                } else {
+                    Toast.makeText(requireActivity(), "Data tidak boleh kosong",
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        //delete swipe
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                deleteItem(viewHolder.getAdapterPosition());
+            }
+        }).attachToRecyclerView(recyclerView);
+
+        //klik untuk isi data ke editText
+        SetOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void OnItemClick(DocumentSnapshot documentSnapshot, int position) {
+                Matakuliah matakuliah = documentSnapshot.toObject(Matakuliah.class);
+                id = documentSnapshot.getId();
+//                Toast.makeText(requireActivity(), id, Toast.LENGTH_SHORT).show();
+                namamtk.setText(documentSnapshot.getString("namamtk"));
+                dosen.setText(documentSnapshot.getString("dosen"));
+                sks.setText(documentSnapshot.get("sks").toString());
+            }
+        });
+        buttonEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //sanity check
+                if (!namamtk.getText().toString().isEmpty() && !sks.getText().toString().isEmpty() && !dosen.getText().toString().isEmpty()) {
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("namamtk", namamtk.getText().toString());
+                    map.put("dosen", dosen.getText().toString());
+                    map.put("sks",Integer.valueOf(sks.getText().toString()));
+                    firebaseFirestoreDb.collection("DaftarMhs").document(id).set(map);
+                    namamtk.setText("");
+                    dosen.setText("");
+                    sks.setText("");
+                } else {
+                    Toast.makeText(requireActivity(), "Data tidak boleh kosong",
                             Toast.LENGTH_SHORT).show();
                 }
             }
@@ -98,13 +164,14 @@ public class firebase_fragment extends Fragment {
                 View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_matakuliah, parent, false);
                 return new DataViewHolder(view);
             }
-            public void deleteItem(int position){
-                getSnapshots().getSnapshot(position).getReference().delete();
-            }
         };
         recyclerView.setAdapter(adapter);
         adapter.startListening();
     }
+    public void deleteItem(int position){
+        adapter.getSnapshots().getSnapshot(position).getReference().delete();
+    }
+
     private class DataViewHolder extends RecyclerView.ViewHolder {
         TextView mtk;
         TextView dsn;
@@ -114,28 +181,28 @@ public class firebase_fragment extends Fragment {
             mtk = itemView.findViewById(R.id.matakuliah);
             dsn = itemView.findViewById(R.id.dosen);
             sks = itemView.findViewById(R.id.sks);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    if(position != RecyclerView.NO_POSITION && listener != null){
+                        listener.OnItemClick(adapter.getSnapshots().getSnapshot(position), position);
+                    }
+                }
+            });
         }
+    }
+    public interface OnItemClickListener{
+        void OnItemClick(DocumentSnapshot documentSnapshot, int position);
+    }
+    public void SetOnItemClickListener(OnItemClickListener listener){
+        this.listener = listener;
     }
     public void onStop(){
         super.onStop();
         adapter.stopListening();
     }
 
-    public void getid(){
-        fireRef.addSnapshotListener((Executor) this, new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                if(e != null){
-                    return;
-                }
-                for(QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots){
-                    Matakuliah matakuliah = documentSnapshot.toObject(Matakuliah.class);
-                    id = documentSnapshot.getId();
-                    Toast.makeText(requireActivity(),id, Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-    }
     private void tambahMahasiswa() {
         Matakuliah mhs = new Matakuliah(namamtk.getText().toString(),
                 Integer.parseInt(sks.getText().toString()),
@@ -158,55 +225,55 @@ public class firebase_fragment extends Fragment {
                     }
                 });
     }
-    private void getDataMahasiswa() {
-        DocumentReference docRef = firebaseFirestoreDb.collection("DaftarMhs").document("mhs1");
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        Matakuliah mhs = document.toObject(Matakuliah.class);
-                        namamtk.setText(mhs.getNamamtk());
-                        sks.setText(mhs.getSks());
-                        dosen.setText(mhs.getDosen());
-
-                    } else {
-                        Toast.makeText(requireActivity(), "Document tidak ditemukan",
-                                Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    Toast.makeText(requireActivity(), "Document error : " + task.getException(),
-                            Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-    }
-    private void deleteDataMahasiswa(String id) {
-        firebaseFirestoreDb.collection("DaftarMhs").document(id)
-                .delete()
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        namamtk.setText("");
-                        sks.setText("");
-                        dosen.setText("");
-                        Toast.makeText(requireActivity(), "Mahasiswa berhasil dihapus",
-                                Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(requireActivity(), "Error deleting document: " + e.getMessage(),
-                                Toast.LENGTH_SHORT).show();
-                    }
-                });
-//        buttonHapus.setOnClickListener(new View.OnClickListener() {
+//    private void getDataMahasiswa() {
+//        DocumentReference docRef = firebaseFirestoreDb.collection("DaftarMhs").document("mhs1");
+//        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
 //            @Override
-//            public void onClick(View v) {
-//                deleteDataMahasiswa();
+//            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                if (task.isSuccessful()) {
+//                    DocumentSnapshot document = task.getResult();
+//                    if (document.exists()) {
+//                        Matakuliah mhs = document.toObject(Matakuliah.class);
+//                        namamtk.setText(mhs.getNamamtk());
+//                        sks.setText(mhs.getSks());
+//                        dosen.setText(mhs.getDosen());
+//
+//                    } else {
+//                        Toast.makeText(requireActivity(), "Document tidak ditemukan",
+//                                Toast.LENGTH_SHORT).show();
+//                    }
+//                } else {
+//                    Toast.makeText(requireActivity(), "Document error : " + task.getException(),
+//                            Toast.LENGTH_SHORT).show();
+//                }
 //            }
 //        });
-    }
+//    }
+//    private void deleteDataMahasiswa(String id) {
+//        firebaseFirestoreDb.collection("DaftarMhs").document(id)
+//                .delete()
+//                .addOnSuccessListener(new OnSuccessListener<Void>() {
+//                    @Override
+//                    public void onSuccess(Void aVoid) {
+//                        namamtk.setText("");
+//                        sks.setText("");
+//                        dosen.setText("");
+//                        Toast.makeText(requireActivity(), "Mahasiswa berhasil dihapus",
+//                                Toast.LENGTH_SHORT).show();
+//                    }
+//                })
+//                .addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//                        Toast.makeText(requireActivity(), "Error deleting document: " + e.getMessage(),
+//                                Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+////        buttonHapus.setOnClickListener(new View.OnClickListener() {
+////            @Override
+////            public void onClick(View v) {
+////                deleteDataMahasiswa();
+////            }
+////        });
+//    }
 }
